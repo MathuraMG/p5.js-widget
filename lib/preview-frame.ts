@@ -46,6 +46,19 @@ function p5url(version: string) {
   return `//cdnjs.cloudflare.com/ajax/libs/p5.js/${version}/p5.js`;
 }
 
+function TextAccessibility() {
+  return([
+    'https://rawgit.com/MathuraMG/p5-interceptor/master/registry.js',
+    'https://rawgit.com/MathuraMG/p5-interceptor/master/loadData.js',
+    'https://rawgit.com/MathuraMG/p5-interceptor/master/interceptorHelperFunctions.js',
+    'https://rawgit.com/MathuraMG/p5-interceptor/master/baseInterceptor.js',
+    'https://rawgit.com/MathuraMG/p5-interceptor/master/entities/entity.min.js',
+    'https://rawgit.com/MathuraMG/p5-interceptor/master/ntc.min.js',
+    'https://rawgit.com/MathuraMG/p5-interceptor/master/textInterceptor/interceptorFunctions.js',
+    'https://rawgit.com/MathuraMG/p5-interceptor/master/textInterceptor/interceptorP5.js',
+  ]);
+}
+
 function LoopChecker(sketch: string, funcName: string, maxRunTime: number) {
   let self = {
     wasTriggered: false,
@@ -118,8 +131,8 @@ function startSketch(sketch: string, p5version: string, maxRunTime: number,
   });
 
   loadScripts([
-    p5url(p5version),
-  ], () => {
+    p5url(p5version)
+  ].concat(TextAccessibility()), () => {
     document.body.appendChild(sketchScript);
     if (document.readyState === 'complete') {
       new global.p5();
