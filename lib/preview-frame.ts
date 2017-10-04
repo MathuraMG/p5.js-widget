@@ -48,14 +48,8 @@ function p5url(version: string) {
 
 function TextAccessibility() {
   return([
-    'https://rawgit.com/MathuraMG/p5-interceptor/master/registry.js',
-    'https://rawgit.com/MathuraMG/p5-interceptor/master/loadData.js',
-    'https://rawgit.com/MathuraMG/p5-interceptor/master/interceptorHelperFunctions.js',
-    'https://rawgit.com/MathuraMG/p5-interceptor/master/baseInterceptor.js',
-    'https://rawgit.com/MathuraMG/p5-interceptor/master/entities/entity.min.js',
-    'https://rawgit.com/MathuraMG/p5-interceptor/master/ntc.min.js',
-    'https://rawgit.com/MathuraMG/p5-interceptor/master/textInterceptor/interceptorFunctions.js',
-    'https://rawgit.com/MathuraMG/p5-interceptor/master/textInterceptor/interceptorP5.js',
+    'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js',
+    'https://rawgit.com/MathuraMG/p5-accessibility/master/dist/p5-accessibility.js'
   ]);
 }
 
