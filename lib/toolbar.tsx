@@ -7,7 +7,10 @@ interface Props {
   onStopClick?: () => void,
   onUndoClick?: () => void,
   onRedoClick?: () => void,
-  onRevertClick?: () => void
+  onRevertClick?: () => void,
+  toggleTextOutput?: () => void,
+  toggleGridOutput?: () => void,
+  toggleSoundOutput?: () => void
 }
 
 interface State {
@@ -70,6 +73,20 @@ export default class Toolbar extends PureComponent<Props, State> {
         {this.props.onRevertClick
           ? <button onClick={this.props.onRevertClick}>Revert</button>
           : null}
+          <fieldset>
+            <div>
+              <input type="checkbox" id="text" name="accessibility-output" value="text" onClick={this.props.toggleTextOutput} />
+              <label for="text">Text Output</label>
+            </div>
+            <div>
+              <input type="checkbox" id="grid" name="accessibility-output" value="grid" onClick={this.props.toggleGridOutput} />
+              <label for="grid">Grid Output</label>
+            </div>
+            <div>
+              <input type="checkbox" id="sound" name="accessibility-output" value="sound" onClick={this.props.toggleSoundOutput} />
+              <label for="sound">Sound Output</label>
+            </div>
+          </fieldset>
       </div>
     );
   }

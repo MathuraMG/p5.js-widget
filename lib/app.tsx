@@ -33,6 +33,9 @@ interface AppState {
   previewContent?: string
   editorContent?: string
   lastError?: ErrorMessage
+  textOutput?: boolean
+  gridOutput?: boolean
+  soundOutput?: boolean
 }
 
 let ErrorMessage = (props: ErrorMessage) => (
@@ -48,6 +51,9 @@ export default class App extends PureComponent<AppProps, AppState> {
     this.state = {
       canUndo: false,
       canRedo: false,
+      textOutput: false,
+      gridOutput: false,
+      soundOutput: false,
       previewContent: this.props.initialContent,
       editorContent: this.props.initialContent
     };
@@ -98,6 +104,27 @@ export default class App extends PureComponent<AppProps, AppState> {
     }));
   }
 
+  toggleTextOutput = () => {
+    this.setState({ textOutput: !this.state.textOutput });
+    if(this.state.isPlaying) {
+      this.handlePlayClick();
+    }
+  }
+
+  toggleGridOutput = () => {
+    this.setState({ gridOutput: !this.state.gridOutput });
+    if(this.state.isPlaying) {
+      this.handlePlayClick();
+    }
+  }
+
+  toggleSoundOutput = () => {
+    this.setState({ soundOutput: !this.state.soundOutput });
+    if(this.state.isPlaying) {
+      this.handlePlayClick();
+    }
+  }
+
   handleStopClick = () => {
     this.setState({ isPlaying: false });
   }
@@ -131,7 +158,10 @@ export default class App extends PureComponent<AppProps, AppState> {
          onStopClick={this.state.isPlaying && this.handleStopClick}
          onUndoClick={this.state.canUndo && this.handleUndoClick}
          onRedoClick={this.state.canRedo && this.handleRedoClick}
-         onRevertClick={canRevert && this.handleRevertClick} />
+         onRevertClick={canRevert && this.handleRevertClick}
+         toggleTextOutput = {this.toggleTextOutput}
+         toggleGridOutput = {this.toggleGridOutput}
+         toggleSoundOutput = {this.toggleSoundOutput} />
         <div className="panes">
           <Editor ref="editor"
                   content={this.state.editorContent}
@@ -144,7 +174,10 @@ export default class App extends PureComponent<AppProps, AppState> {
                        p5version={this.props.p5version}
                        width={this.props.previewWidth}
                        timestamp={this.state.startPlayTimestamp}
-                       onError={this.handlePreviewError} />
+                       onError={this.handlePreviewError}
+                       textOutput = {this.state.textOutput}
+                       gridOutput = {this.state.gridOutput}
+                       soundOutput = {this.state.soundOutput}/>
             : null}
           </div>
         </div>
@@ -153,32 +186,6 @@ export default class App extends PureComponent<AppProps, AppState> {
            ? <ErrorMessage {...this.state.lastError} />
            : null}
         </div>
-
-        <section
-        id="textOutput-content"
-        >
-          <h2> Text Output </h2>
-          <p
-            tabIndex="0"
-            role="main"
-            id="textOutput-content-summary"
-            aria-label="text output summary"
-          >
-          </p>
-          <table
-            id="textOutput-content-table"
-            summary="text output details"
-          >
-          </table>
-          <div
-            tabIndex="0"
-            role="main"
-            id="textOutput-content-details"
-            aria-label="text output details"
-          >
-          </div>
-        </section>
-
       </div>
     );
   }

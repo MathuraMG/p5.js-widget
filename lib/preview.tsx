@@ -14,6 +14,9 @@ interface Props {
   content: string,
   baseSketchURL: string,
   timestamp: number,
+  textOutput: boolean,
+  gridOutput: boolean,
+  soundOutput: boolean,
   onError: PreviewFrame.ErrorReporter
 }
 
@@ -52,6 +55,27 @@ export default class Preview extends PureComponent<Props, State> {
       // Note that this should never be called if we're already unmounted,
       // since that means the iframe will have been removed from the DOM,
       // in which case it shouldn't be emitting events anymore.
+      console.log('****');
+      console.log(this.props);
+      if(this.props.textOutput) {
+        var iframeDocument = iframe.contentDocument;
+        var textSection = iframeDocument.createElement("section");
+        textSection.setAttribute('id','textOutput-content');
+        iframeDocument.body.appendChild(textSection);
+      }
+      if(this.props.gridOutput) {
+        var iframeDocument = iframe.contentDocument;
+        var gridSection = iframeDocument.createElement("section");
+        gridSection.setAttribute('id','gridOutput-content');
+        iframeDocument.body.appendChild(gridSection);
+        console.log(iframe);
+      }
+      if(this.props.soundOutput) {
+        var iframeDocument = iframe.contentDocument;
+        var soundSection = iframeDocument.createElement("section");
+        soundSection.setAttribute('id','soundOutput-content');
+        iframeDocument.body.appendChild(soundSection);
+      }
       let frame = iframe.contentWindow as PreviewFrame.Runner;
       frame.startSketch(content, this.props.p5version, 1000,
                         LOOP_CHECK_FUNC_NAME,
@@ -59,7 +83,11 @@ export default class Preview extends PureComponent<Props, State> {
                         this.props.onError);
     });
     this.refs.container.appendChild(iframe);
+
+    // debugger;
     this._iframe = iframe;
+
+
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -70,6 +98,7 @@ export default class Preview extends PureComponent<Props, State> {
 
   componentDidMount() {
     this.resetIframe();
+    console.log('mounted');
   }
 
   componentWillUnmount() {
@@ -82,6 +111,10 @@ export default class Preview extends PureComponent<Props, State> {
   }
 
   render() {
-    return <div ref="container" className="preview-holder"></div>;
+    return (
+      <div>
+        <div ref="container" className="preview-holder"></div>;
+      </div>
+    )
   }
 }
