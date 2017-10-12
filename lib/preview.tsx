@@ -55,8 +55,6 @@ export default class Preview extends PureComponent<Props, State> {
       // Note that this should never be called if we're already unmounted,
       // since that means the iframe will have been removed from the DOM,
       // in which case it shouldn't be emitting events anymore.
-      console.log('****');
-      console.log(this.props);
       if(this.props.textOutput) {
         var iframeDocument = iframe.contentDocument;
         var textSection = iframeDocument.createElement("section");

@@ -73,20 +73,24 @@ export default class Toolbar extends PureComponent<Props, State> {
         {this.props.onRevertClick
           ? <button onClick={this.props.onRevertClick}>Revert</button>
           : null}
-          <fieldset>
-            <div>
+          <ul role="group">
+            <li role="menuitem">
               <input type="checkbox" id="text" name="accessibility-output" value="text" onClick={this.props.toggleTextOutput} />
               <label for="text">Text Output</label>
-            </div>
-            <div>
+            </li>
+            <li role="menuitem">
               <input type="checkbox" id="grid" name="accessibility-output" value="grid" onClick={this.props.toggleGridOutput} />
               <label for="grid">Grid Output</label>
-            </div>
-            <div>
+            </li>
+            <li role="menuitem">
               <input type="checkbox" id="sound" name="accessibility-output" value="sound" onClick={this.props.toggleSoundOutput} />
               <label for="sound">Sound Output</label>
-            </div>
-          </fieldset>
+            </li>
+          </ul>
+
+          <p> Current line
+            <span className="editor-linenumber" aria-live="polite" aria-atomic="true" id="current-line"> </span>
+          </p>
       </div>
     );
   }

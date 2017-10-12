@@ -52,13 +52,23 @@ export default class Editor extends PureComponent<Props, State> {
       theme: 'p5-widget',
       value: this.props.content,
       lineNumbers: true,
-      mode: 'javascript'
+      mode: 'javascript',
+      inputStyle: 'contenteditable',
     });
     this._cm.on('change', () => {
       if (this.props.onChange) {
         let size = this._cm.getDoc().historySize();
         this.props.onChange(this._cm.getValue(),
                             size.undo > 0, size.redo > 0);
+      }
+    });
+    this._cm.on('keyup', () => {
+      console.log("key is up");
+      console.log(document);
+      const oldLine = document.getElementById('current-line').innerHTML;
+      const temp = `line ${parseInt((this._cm.getCursor().line) + 1, 10)}`;
+      if(temp.localeCompare(oldLine)!=0) {
+        document.getElementById('current-line').innerHTML = temp;
       }
     });
     this.resizeEditor();
