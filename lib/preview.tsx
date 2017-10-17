@@ -50,6 +50,8 @@ export default class Preview extends PureComponent<Props, State> {
     let iframe = document.createElement('iframe');
 
     iframe.setAttribute('src', 'preview-frame.html');
+    iframe.setAttribute('title', 'p5 output');
+    iframe.setAttribute('aria-label', 'p5 output');
     iframe.setAttribute('width', this.props.width.toString());
     iframe.addEventListener('load', () => {
       // Note that this should never be called if we're already unmounted,
@@ -60,13 +62,14 @@ export default class Preview extends PureComponent<Props, State> {
         var textSection = iframeDocument.createElement("section");
         textSection.setAttribute('id','textOutput-content');
         iframeDocument.body.appendChild(textSection);
+        iframe.focus();
       }
       if(this.props.gridOutput) {
         var iframeDocument = iframe.contentDocument;
         var gridSection = iframeDocument.createElement("section");
         gridSection.setAttribute('id','gridOutput-content');
         iframeDocument.body.appendChild(gridSection);
-        console.log(iframe);
+        iframe.focus();
       }
       if(this.props.soundOutput) {
         var iframeDocument = iframe.contentDocument;
