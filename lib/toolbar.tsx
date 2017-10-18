@@ -44,7 +44,7 @@ let OpenIconicActionRedo = () => (
 export default class Toolbar extends PureComponent<Props, State> {
   render() {
     return (
-      <div className="toolbar">
+      <nav className="toolbar">
         <a className="p5-logo" href="http://p5js.org/" target="_blank">
           <img src="static/img/p5js-beta.svg" alt="p5js.org"/>
         </a>
@@ -91,7 +91,7 @@ export default class Toolbar extends PureComponent<Props, State> {
           <p> Current line
             <span className="editor-linenumber" aria-live="polite" aria-atomic="true" id="current-line"> </span>
           </p>
-      </div>
+      </nav>
     );
   }
 }

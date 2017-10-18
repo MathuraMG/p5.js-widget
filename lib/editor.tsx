@@ -116,6 +116,6 @@ export default class Editor extends PureComponent<Props, State> {
   }
 
   render() {
-    return <div ref="container" className="editor-holder"></div>;
+    return <div ref="container" className="editor-holder" title="code editor"></div>;
   }
 }
