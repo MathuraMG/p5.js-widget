@@ -21542,7 +21542,7 @@
 	        _super.apply(this, arguments);
 	    }
 	    Toolbar.prototype.render = function () {
-	        return (React.createElement("div", {className: "toolbar"}, React.createElement("a", {className: "p5-logo", href: "http://p5js.org/", target: "_blank"}, React.createElement("img", {src: "static/img/p5js-beta.svg", alt: "p5js.org"})), React.createElement("button", {onClick: this.props.onPlayClick}, React.createElement(OpenIconicMediaPlay, null), "Play"), this.props.onStopClick
+	        return (React.createElement("nav", {className: "toolbar"}, React.createElement("a", {className: "p5-logo", href: "http://p5js.org/", target: "_blank"}, React.createElement("img", {src: "static/img/p5js-beta.svg", alt: "p5js.org"})), React.createElement("button", {onClick: this.props.onPlayClick}, React.createElement(OpenIconicMediaPlay, null), "Play"), this.props.onStopClick
 	            ? React.createElement("button", {onClick: this.props.onStopClick}, React.createElement(OpenIconicMediaStop, null), "Stop")
 	            : null, this.props.onUndoClick
 	            ? React.createElement("button", {onClick: this.props.onUndoClick}, React.createElement(OpenIconicActionUndo, null), "Undo")
@@ -21651,7 +21651,7 @@
 	        this._cm.getDoc().redo();
 	    };
 	    Editor.prototype.render = function () {
-	        return React.createElement("div", {ref: "container", className: "editor-holder"});
+	        return React.createElement("div", {ref: "container", className: "editor-holder", title: "code editor"});
 	    };
 	    return Editor;
 	}(pure_component_1.default));
