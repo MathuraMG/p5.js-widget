@@ -31849,6 +31849,8 @@
 	        iframe.setAttribute('src', 'preview-frame.html');
 	        iframe.setAttribute('title', 'p5 output');
 	        iframe.setAttribute('aria-label', 'p5 output');
+	        iframe.setAttribute('role', 'group');
+	        iframe.setAttribute('tabIndex', '0');
 	        iframe.setAttribute('width', this.props.width.toString());
 	        iframe.addEventListener('load', function () {
 	            // Note that this should never be called if we're already unmounted,
