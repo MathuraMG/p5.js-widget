@@ -75,7 +75,7 @@
 	function TextAccessibility() {
 	    return ([
 	        'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js',
-	        'https://rawgit.com/MathuraMG/p5-accessibility/master/dist/p5-accessibility.js'
+	        'https://rawgit.com/MathuraMG/p5-accessibility/fix-bug/dist/p5-accessibility.js'
 	    ]);
 	}
 	function LoopChecker(sketch, funcName, maxRunTime) {
