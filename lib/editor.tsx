@@ -15,6 +15,7 @@ const INITIAL_RESIZE_DELAY_MS = 100;
 interface Props {
   content?: string
   errorLine?: number
+  isTextArea?: boolean
   onChange?: (newValue: string, canUndo: boolean, canRedo: boolean) => void
 }
 
@@ -27,6 +28,13 @@ export default class Editor extends PureComponent<Props, State> {
   _errorLineHandle: any
 
   componentDidUpdate(prevProps: Props) {
+    if(this.props.isTextArea != prevProps.isTextArea) {
+      if(this.props.isTextArea) {
+        this.setToTextArea();
+      } else {
+        this.setToCodeMirror();
+      }
+    }
     if (this.props.content !== prevProps.content &&
         this.props.content !== this._cm.getValue()) {
       this._cm.setValue(this.props.content);
@@ -47,8 +55,20 @@ export default class Editor extends PureComponent<Props, State> {
     }
   }
 
-  componentDidMount() {
-    this._cm = CodeMirror(this.refs.container, {
+  setToTextArea() {
+    this._cm.toTextArea();
+    let textEditor = document.getElementById("textarea");
+    textEditor.addEventListener('keyup', () => {
+      const oldLine = document.getElementById('current-line').innerHTML;
+      const currentLine = (String)(textEditor.value.substr(0, textEditor.selectionStart).split("\n").length);
+      if(currentLine.localeCompare(oldLine)!=0) {
+        document.getElementById('current-line').innerHTML = currentLine;
+      }
+    })
+  }
+
+  setToCodeMirror() {
+    this._cm = CodeMirror.fromTextArea(document.getElementById("textarea"), {
       theme: 'p5-widget',
       value: this.props.content,
       lineNumbers: true,
@@ -63,18 +83,20 @@ export default class Editor extends PureComponent<Props, State> {
       }
     });
     this._cm.on('keyup', () => {
-      console.log("key is up");
-      console.log(document);
       const oldLine = document.getElementById('current-line').innerHTML;
-      const temp = `line ${parseInt((this._cm.getCursor().line) + 1, 10)}`;
-      if(temp.localeCompare(oldLine)!=0) {
-        document.getElementById('current-line').innerHTML = temp;
+      const currentLine = `line ${parseInt((this._cm.getCursor().line) + 1, 10)}`;
+      if(currentLine.localeCompare(oldLine)!=0) {
+        document.getElementById('current-line').innerHTML = currentLine;
       }
     });
     this.resizeEditor();
     this._resizeTimeout = setTimeout(this.resizeEditor,
                                      INITIAL_RESIZE_DELAY_MS);
     window.addEventListener('resize', this.resizeEditor, false);
+  }
+
+  componentDidMount() {
+    this.setToCodeMirror();
   }
 
   componentWillUnmount() {
@@ -116,6 +138,12 @@ export default class Editor extends PureComponent<Props, State> {
   }
 
   render() {
-    return <div ref="container" className="editor-holder" title="code editor"></div>;
+    return (
+      <div ref="container" className="editor-holder">
+        <textarea id="textarea" defaultValue={this.props.content} onChange={()=>{this.props.onChange(document.getElementById('textarea').value)}}>
+        </textarea>
+      </div>
+    )
+;
   }
 }
