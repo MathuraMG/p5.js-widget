@@ -10,7 +10,8 @@ interface Props {
   onRevertClick?: () => void,
   toggleTextOutput?: () => void,
   toggleGridOutput?: () => void,
-  toggleSoundOutput?: () => void
+  toggleSoundOutput?: () => void,
+  toggleTextArea?: () => void
 }
 
 interface State {
@@ -58,22 +59,22 @@ export default class Toolbar extends PureComponent<Props, State> {
               Stop
             </button>
           : null }
-        {this.props.onUndoClick
+        {this.props.onUndoClick && !this.props.isTextArea
           ? <button onClick={this.props.onUndoClick}>
               <OpenIconicActionUndo/>
               Undo
             </button>
           : null}
-        {this.props.onRedoClick
+        {this.props.onRedoClick && !this.props.isTextArea
           ? <button onClick={this.props.onRedoClick}>
               <OpenIconicActionRedo/>
               Redo
             </button>
           : null}
-        {this.props.onRevertClick
+        {this.props.onRevertClick && !this.props.isTextArea
           ? <button onClick={this.props.onRevertClick}>Revert</button>
           : null}
-          <div role="group" title="output options">
+          <ul role="group" title="output options">
             <input type="checkbox" id="text" aria-label="text output" name="text output" value="text" onClick={this.props.toggleTextOutput} />
             <label for="text">Text Output</label>
             <input type="checkbox" id="grid" aria-label="grid output" name="text output" value="grid" onClick={this.props.toggleGridOutput} />
@@ -81,6 +82,7 @@ export default class Toolbar extends PureComponent<Props, State> {
             <input type="checkbox" id="sound" aria-label="sound output" name="text output" value="sound" onClick={this.props.toggleSoundOutput} />
             <label for="sound">Sound Output</label>
           </ul>
+          <button onClick={this.props.toggleTextArea}>Toggle TextArea</button>
 
           <p> Current line
             <span className="editor-linenumber" aria-live="polite" aria-atomic="true" id="current-line"> </span>

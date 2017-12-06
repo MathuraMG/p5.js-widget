@@ -36,6 +36,7 @@ interface AppState {
   textOutput?: boolean
   gridOutput?: boolean
   soundOutput?: boolean
+  isTextArea?: boolean
 }
 
 let ErrorMessage = (props: ErrorMessage) => (
@@ -54,6 +55,7 @@ export default class App extends PureComponent<AppProps, AppState> {
       textOutput: false,
       gridOutput: false,
       soundOutput: false,
+      isTextArea: false,
       previewContent: this.props.initialContent,
       editorContent: this.props.initialContent
     };
@@ -125,6 +127,10 @@ export default class App extends PureComponent<AppProps, AppState> {
     }
   }
 
+  toggleTextArea = () => {
+    this.setState({ isTextArea: !this.state.isTextArea });
+  }
+
   handleStopClick = () => {
     this.setState({ isPlaying: false });
   }
@@ -161,12 +167,16 @@ export default class App extends PureComponent<AppProps, AppState> {
          onRevertClick={canRevert && this.handleRevertClick}
          toggleTextOutput = {this.toggleTextOutput}
          toggleGridOutput = {this.toggleGridOutput}
-         toggleSoundOutput = {this.toggleSoundOutput} />
+         toggleSoundOutput = {this.toggleSoundOutput}
+         toggleTextArea = {this.toggleTextArea}
+         isTextArea = {this.state.isTextArea}
+        />
         <div className="panes">
           <Editor ref="editor"
                   content={this.state.editorContent}
                   errorLine={errorLine}
-                  onChange={this.handleEditorChange} />
+                  onChange={this.handleEditorChange}
+                  isTextArea = {this.state.isTextArea} />
           <div className="preview-holder-wrapper">
           {this.state.isPlaying
             ? <Preview content={this.state.previewContent}
@@ -177,7 +187,8 @@ export default class App extends PureComponent<AppProps, AppState> {
                        onError={this.handlePreviewError}
                        textOutput = {this.state.textOutput}
                        gridOutput = {this.state.gridOutput}
-                       soundOutput = {this.state.soundOutput}/>
+                       soundOutput = {this.state.soundOutput}
+                       />
             : null}
           </div>
         </div>

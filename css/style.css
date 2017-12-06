@@ -134,3 +134,11 @@ a.p5-logo img {
 .error-line {
   background: var(--light-pink);
 }
+
+#textarea {
+  height: 100%;
+  width: 100%;
+  overflow-x: scroll;
+  white-space: nowrap;
+  padding-left: 0.5rem;
+}
