@@ -21360,6 +21360,9 @@
 	                _this.handlePlayClick();
 	            }
 	        };
+	        this.toggleTextArea = function () {
+	            _this.setState({ isTextArea: !_this.state.isTextArea });
+	        };
 	        this.handleStopClick = function () {
 	            _this.setState({ isPlaying: false });
 	        };
@@ -21375,6 +21378,7 @@
 	            textOutput: false,
 	            gridOutput: false,
 	            soundOutput: false,
+	            isTextArea: false,
 	            previewContent: this.props.initialContent,
 	            editorContent: this.props.initialContent
 	        };
@@ -21395,7 +21399,7 @@
 	            this.state.editorContent === this.state.previewContent) {
 	            errorLine = this.state.lastError.line;
 	        }
-	        return (React.createElement("div", {className: "app"}, React.createElement(toolbar_1.default, {onPlayClick: this.handlePlayClick, onStopClick: this.state.isPlaying && this.handleStopClick, onUndoClick: this.state.canUndo && this.handleUndoClick, onRedoClick: this.state.canRedo && this.handleRedoClick, onRevertClick: canRevert && this.handleRevertClick, toggleTextOutput: this.toggleTextOutput, toggleGridOutput: this.toggleGridOutput, toggleSoundOutput: this.toggleSoundOutput}), React.createElement("div", {className: "panes"}, React.createElement(editor_1.default, {ref: "editor", content: this.state.editorContent, errorLine: errorLine, onChange: this.handleEditorChange}), React.createElement("div", {className: "preview-holder-wrapper"}, this.state.isPlaying
+	        return (React.createElement("div", {className: "app"}, React.createElement(toolbar_1.default, {onPlayClick: this.handlePlayClick, onStopClick: this.state.isPlaying && this.handleStopClick, onUndoClick: this.state.canUndo && this.handleUndoClick, onRedoClick: this.state.canRedo && this.handleRedoClick, onRevertClick: canRevert && this.handleRevertClick, toggleTextOutput: this.toggleTextOutput, toggleGridOutput: this.toggleGridOutput, toggleSoundOutput: this.toggleSoundOutput, toggleTextArea: this.toggleTextArea, isTextArea: this.state.isTextArea}), React.createElement("div", {className: "panes"}, React.createElement(editor_1.default, {ref: "editor", content: this.state.editorContent, errorLine: errorLine, onChange: this.handleEditorChange, isTextArea: this.state.isTextArea}), React.createElement("div", {className: "preview-holder-wrapper"}, this.state.isPlaying
 	            ? React.createElement(preview_1.default, {content: this.state.previewContent, baseSketchURL: this.props.baseSketchURL, p5version: this.props.p5version, width: this.props.previewWidth, timestamp: this.state.startPlayTimestamp, onError: this.handlePreviewError, textOutput: this.state.textOutput, gridOutput: this.state.gridOutput, soundOutput: this.state.soundOutput})
 	            : null)), React.createElement("div", {className: "status-bar"}, this.state.lastError
 	            ? React.createElement(ErrorMessage, __assign({}, this.state.lastError))
@@ -21544,13 +21548,13 @@
 	    Toolbar.prototype.render = function () {
 	        return (React.createElement("nav", {className: "toolbar"}, React.createElement("a", {className: "p5-logo", href: "http://p5js.org/", target: "_blank"}, React.createElement("img", {src: "static/img/p5js-beta.svg", alt: "p5js.org"})), React.createElement("button", {onClick: this.props.onPlayClick}, React.createElement(OpenIconicMediaPlay, null), "Play"), this.props.onStopClick
 	            ? React.createElement("button", {onClick: this.props.onStopClick}, React.createElement(OpenIconicMediaStop, null), "Stop")
-	            : null, this.props.onUndoClick
+	            : null, this.props.onUndoClick && !this.props.isTextArea
 	            ? React.createElement("button", {onClick: this.props.onUndoClick}, React.createElement(OpenIconicActionUndo, null), "Undo")
-	            : null, this.props.onRedoClick
+	            : null, this.props.onRedoClick && !this.props.isTextArea
 	            ? React.createElement("button", {onClick: this.props.onRedoClick}, React.createElement(OpenIconicActionRedo, null), "Redo")
-	            : null, this.props.onRevertClick
+	            : null, this.props.onRevertClick && !this.props.isTextArea
 	            ? React.createElement("button", {onClick: this.props.onRevertClick}, "Revert")
-	            : null, React.createElement("div", {role: "group", title: "output options"}, React.createElement("input", {type: "checkbox", id: "text", "aria-label": "text output", name: "text output", value: "text", onClick: this.props.toggleTextOutput}), React.createElement("label", {for: "text"}, "Text Output"), React.createElement("input", {type: "checkbox", id: "grid", "aria-label": "grid output", name: "text output", value: "grid", onClick: this.props.toggleGridOutput}), React.createElement("label", {for: "grid"}, "Grid Output"), React.createElement("input", {type: "checkbox", id: "sound", "aria-label": "sound output", name: "text output", value: "sound", onClick: this.props.toggleSoundOutput}), React.createElement("label", {for: "sound"}, "Sound Output")), React.createElement("p", null, " Current line", React.createElement("span", {className: "editor-linenumber", "aria-live": "polite", "aria-atomic": "true", id: "current-line"}, " "))));
+	            : null, React.createElement("ul", {role: "group", title: "output options"}, React.createElement("input", {type: "checkbox", id: "text", "aria-label": "text output", name: "text output", value: "text", onClick: this.props.toggleTextOutput}), React.createElement("label", {for: "text"}, "Text Output"), React.createElement("input", {type: "checkbox", id: "grid", "aria-label": "grid output", name: "text output", value: "grid", onClick: this.props.toggleGridOutput}), React.createElement("label", {for: "grid"}, "Grid Output"), React.createElement("input", {type: "checkbox", id: "sound", "aria-label": "sound output", name: "text output", value: "sound", onClick: this.props.toggleSoundOutput}), React.createElement("label", {for: "sound"}, "Sound Output")), React.createElement("button", {onClick: this.props.toggleTextArea}, "Toggle TextArea"), React.createElement("p", null, " Current line", React.createElement("span", {className: "editor-linenumber", "aria-live": "polite", "aria-atomic": "true", id: "current-line"}, " "))));
 	    };
 	    return Toolbar;
 	}(pure_component_1.default));
@@ -21595,6 +21599,14 @@
 	        };
 	    }
 	    Editor.prototype.componentDidUpdate = function (prevProps) {
+	        if (this.props.isTextArea != prevProps.isTextArea) {
+	            if (this.props.isTextArea) {
+	                this.setToTextArea();
+	            }
+	            else {
+	                this.setToCodeMirror();
+	            }
+	        }
 	        if (this.props.content !== prevProps.content &&
 	            this.props.content !== this._cm.getValue()) {
 	            this._cm.setValue(this.props.content);
@@ -21609,9 +21621,20 @@
 	            }
 	        }
 	    };
-	    Editor.prototype.componentDidMount = function () {
+	    Editor.prototype.setToTextArea = function () {
+	        this._cm.toTextArea();
+	        var textEditor = document.getElementById("textarea");
+	        textEditor.addEventListener('keyup', function () {
+	            var oldLine = document.getElementById('current-line').innerHTML;
+	            var currentLine = (String)(textEditor.value.substr(0, textEditor.selectionStart).split("\n").length);
+	            if (currentLine.localeCompare(oldLine) != 0) {
+	                document.getElementById('current-line').innerHTML = currentLine;
+	            }
+	        });
+	    };
+	    Editor.prototype.setToCodeMirror = function () {
 	        var _this = this;
-	        this._cm = CodeMirror(this.refs.container, {
+	        this._cm = CodeMirror.fromTextArea(document.getElementById("textarea"), {
 	            theme: 'p5-widget',
 	            value: this.props.content,
 	            lineNumbers: true,
@@ -21625,17 +21648,18 @@
 	            }
 	        });
 	        this._cm.on('keyup', function () {
-	            console.log("key is up");
-	            console.log(document);
 	            var oldLine = document.getElementById('current-line').innerHTML;
-	            var temp = "line " + parseInt((_this._cm.getCursor().line) + 1, 10);
-	            if (temp.localeCompare(oldLine) != 0) {
-	                document.getElementById('current-line').innerHTML = temp;
+	            var currentLine = "line " + parseInt((_this._cm.getCursor().line) + 1, 10);
+	            if (currentLine.localeCompare(oldLine) != 0) {
+	                document.getElementById('current-line').innerHTML = currentLine;
 	            }
 	        });
 	        this.resizeEditor();
 	        this._resizeTimeout = setTimeout(this.resizeEditor, INITIAL_RESIZE_DELAY_MS);
 	        window.addEventListener('resize', this.resizeEditor, false);
+	    };
+	    Editor.prototype.componentDidMount = function () {
+	        this.setToCodeMirror();
 	    };
 	    Editor.prototype.componentWillUnmount = function () {
 	        // CodeMirror instances have no remove/destroy methods, so we
@@ -21651,7 +21675,8 @@
 	        this._cm.getDoc().redo();
 	    };
 	    Editor.prototype.render = function () {
-	        return React.createElement("div", {ref: "container", className: "editor-holder", title: "code editor"});
+	        var _this = this;
+	        return (React.createElement("div", {ref: "container", className: "editor-holder"}, React.createElement("textarea", {id: "textarea", defaultValue: this.props.content, onChange: function () { _this.props.onChange(document.getElementById('textarea').value); }})));
 	    };
 	    return Editor;
 	}(pure_component_1.default));
@@ -38192,7 +38217,7 @@
 	
 	
 	// module
-	exports.push([module.id, "html,\nbody,\n#app-holder,\n.app {\n  height: 100%;\n}\n\nbody {\n  margin: 0;\n}\n\nbutton {\n  font-size: 14px;\n  font-family: Montserrat, sans-serif;\n  font-weight: normal;\n  color: black;\n  border: 1px solid #ec245e;\n  background: inherit;\n  color: #ec245e;\n  border-radius: 2px;\n  padding: 2px 12px;\n  cursor: pointer;\n}\n\nbutton:hover,\nbutton:hover .open-iconic {\n  fill: #30b8e6;\n  color: #30b8e6;\n  border-color: #30b8e6;\n}\n\na.p5-logo {\n  margin-left: 10px;\n  margin-right: 25px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n\na.p5-logo img {\n  height: 25px;\n}\n\n.open-iconic {\n  fill: #ec245e;\n  height: 16px;\n  width: 16px;\n  vertical-align: -10%;\n  margin-right: 5px;\n}\n\n.app {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n\n.status-bar {\n  border-top: 1px solid #ec245e;\n  background: #f0f0f0;\n  min-height: 1em;\n  font-family: \"Monaco\", \"Menlo\", \"Ubuntu Mono\", \"Consolas\",\n               \"source-code-pro\", monospace;\n  padding: 8px;\n}\n\n.error-message .error-message-line {\n  font-family: Montserrat, sans-serif;\n  font-weight: normal;\n  color: red;\n}\n\n.toolbar {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n}\n\n.toolbar button {\n  margin: 10px;\n}\n\n.panes {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  border-top: 1px solid #ec245e;\n}\n\n\n.panes .editor-holder {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n\n  /* We need this for horizontal scrolling to work properly.\n   * Very weird. */\n  overflow-x: hidden;\n}\n\n.panes .preview-holder-wrapper {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n\n.panes .preview-holder {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  border-left: 16px solid #f0f0f0;\n}\n\n.panes .preview-holder-wrapper iframe {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  border: none;\n}\n\n.CodeMirror {\n  font-family: \"Monaco\", \"Menlo\", \"Ubuntu Mono\", \"Consolas\",\n               \"source-code-pro\", monospace;\n\n  /* If we don't add this, the final characters on some lines aren't\n   * visible if the editor has a horizontal scrollbar. Weird. */\n  padding-right: 1em;\n}\n\n.CodeMirror-gutters {\n  border-right: none;\n  background: #f0f0f0;\n}\n\n.error-line {\n  background: #ffe5ea;\n}\n", "", {"version":3,"sources":["/./css/style.css"],"names":[],"mappings":"AAUA;;;;EAIE,aAAa;CACd;;AAED;EACE,UAAU;CACX;;AAED;EACE,gBAAgB;EAChB,oCAA4B;EAC5B,oBAAoB;EACpB,aAAa;EACb,0BAAmC;EACnC,oBAAoB;EACpB,eAAwB;EACxB,mBAAmB;EACnB,kBAAkB;EAClB,gBAAgB;CACjB;;AAED;;EAEE,cAAqB;EACrB,eAAsB;EACtB,sBAA6B;CAC9B;;AAED;EACE,kBAAkB;EAClB,mBAAmB;EACnB,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,6BAAuB;EAAvB,8BAAuB;MAAvB,2BAAuB;UAAvB,uBAAuB;EACvB,yBAAwB;MAAxB,sBAAwB;UAAxB,wBAAwB;CACzB;;AAED;EACE,aAAa;CACd;;AAED;EACE,cAAuB;EACvB,aAAa;EACb,YAAY;EACZ,qBAAqB;EACrB,kBAAkB;CACnB;;AAED;EACE,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,6BAAuB;EAAvB,8BAAuB;MAAvB,2BAAuB;UAAvB,uBAAuB;CACxB;;AAED;EACE,8BAAuC;EACvC,oBAAmC;EACnC,gBAAgB;EAChB;4CAA8B;EAC9B,aAAa;CACd;;AAED;EACE,oCAA4B;EAC5B,oBAAoB;EACpB,WAAW;CACZ;;AAED;EACE,qBAAc;EAAd,qBAAc;EAAd,cAAc;CACf;;AAED;EACE,aAAa;CACd;;AAED;EACE,oBAAQ;MAAR,YAAQ;UAAR,QAAQ;EACR,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,8BAAuC;CACxC;;;AAGD;EACE,oBAAQ;MAAR,YAAQ;UAAR,QAAQ;;EAER;mBACiB;EACjB,mBAAmB;CACpB;;AAED;EACE,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,6BAAuB;EAAvB,8BAAuB;MAAvB,2BAAuB;UAAvB,uBAAuB;CACxB;;AAED;EACE,oBAAQ;MAAR,YAAQ;UAAR,QAAQ;EACR,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,6BAAuB;EAAvB,8BAAuB;MAAvB,2BAAuB;UAAvB,uBAAuB;EACvB,gCAA+C;CAChD;;AAED;EACE,oBAAQ;MAAR,YAAQ;UAAR,QAAQ;EACR,aAAa;CACd;;AAED;EACE;4CAA8B;;EAE9B;gEAC8D;EAC9D,mBAAmB;CACpB;;AAED;EACE,mBAAmB;EACnB,oBAAmC;CACpC;;AAED;EACE,oBAA8B;CAC/B","file":"style.css","sourcesContent":[":root {\n  --very-light-gray: #f0f0f0;\n  --light-pink: #ffe5ea;\n  --dark-pink: #ec245e;\n  --blueish: #30b8e6;\n  --ui-font: Montserrat, sans-serif;\n  --code-font: \"Monaco\", \"Menlo\", \"Ubuntu Mono\", \"Consolas\",\n               \"source-code-pro\", monospace;\n}\n\nhtml,\nbody,\n#app-holder,\n.app {\n  height: 100%;\n}\n\nbody {\n  margin: 0;\n}\n\nbutton {\n  font-size: 14px;\n  font-family: var(--ui-font);\n  font-weight: normal;\n  color: black;\n  border: 1px solid var(--dark-pink);\n  background: inherit;\n  color: var(--dark-pink);\n  border-radius: 2px;\n  padding: 2px 12px;\n  cursor: pointer;\n}\n\nbutton:hover,\nbutton:hover .open-iconic {\n  fill: var(--blueish);\n  color: var(--blueish);\n  border-color: var(--blueish);\n}\n\na.p5-logo {\n  margin-left: 10px;\n  margin-right: 25px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n}\n\na.p5-logo img {\n  height: 25px;\n}\n\n.open-iconic {\n  fill: var(--dark-pink);\n  height: 16px;\n  width: 16px;\n  vertical-align: -10%;\n  margin-right: 5px;\n}\n\n.app {\n  display: flex;\n  flex-direction: column;\n}\n\n.status-bar {\n  border-top: 1px solid var(--dark-pink);\n  background: var(--very-light-gray);\n  min-height: 1em;\n  font-family: var(--code-font);\n  padding: 8px;\n}\n\n.error-message .error-message-line {\n  font-family: var(--ui-font);\n  font-weight: normal;\n  color: red;\n}\n\n.toolbar {\n  display: flex;\n}\n\n.toolbar button {\n  margin: 10px;\n}\n\n.panes {\n  flex: 1;\n  display: flex;\n  border-top: 1px solid var(--dark-pink);\n}\n\n\n.panes .editor-holder {\n  flex: 1;\n\n  /* We need this for horizontal scrolling to work properly.\n   * Very weird. */\n  overflow-x: hidden;\n}\n\n.panes .preview-holder-wrapper {\n  display: flex;\n  flex-direction: column;\n}\n\n.panes .preview-holder {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  border-left: 16px solid var(--very-light-gray);\n}\n\n.panes .preview-holder-wrapper iframe {\n  flex: 1;\n  border: none;\n}\n\n.CodeMirror {\n  font-family: var(--code-font);\n\n  /* If we don't add this, the final characters on some lines aren't\n   * visible if the editor has a horizontal scrollbar. Weird. */\n  padding-right: 1em;\n}\n\n.CodeMirror-gutters {\n  border-right: none;\n  background: var(--very-light-gray);\n}\n\n.error-line {\n  background: var(--light-pink);\n}\n"],"sourceRoot":"webpack://"}]);
+	exports.push([module.id, "html,\nbody,\n#app-holder,\n.app {\n  height: 100%;\n}\n\nbody {\n  margin: 0;\n}\n\nbutton {\n  font-size: 14px;\n  font-family: Montserrat, sans-serif;\n  font-weight: normal;\n  color: black;\n  border: 1px solid #ec245e;\n  background: inherit;\n  color: #ec245e;\n  border-radius: 2px;\n  padding: 2px 12px;\n  cursor: pointer;\n}\n\nbutton:hover,\nbutton:hover .open-iconic {\n  fill: #30b8e6;\n  color: #30b8e6;\n  border-color: #30b8e6;\n}\n\na.p5-logo {\n  margin-left: 10px;\n  margin-right: 25px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n\na.p5-logo img {\n  height: 25px;\n}\n\n.open-iconic {\n  fill: #ec245e;\n  height: 16px;\n  width: 16px;\n  vertical-align: -10%;\n  margin-right: 5px;\n}\n\n.app {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n\n.status-bar {\n  border-top: 1px solid #ec245e;\n  background: #f0f0f0;\n  min-height: 1em;\n  font-family: \"Monaco\", \"Menlo\", \"Ubuntu Mono\", \"Consolas\",\n               \"source-code-pro\", monospace;\n  padding: 8px;\n}\n\n.error-message .error-message-line {\n  font-family: Montserrat, sans-serif;\n  font-weight: normal;\n  color: red;\n}\n\n.toolbar {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n}\n\n.toolbar button {\n  margin: 10px;\n}\n\n.panes {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  border-top: 1px solid #ec245e;\n}\n\n\n.panes .editor-holder {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n\n  /* We need this for horizontal scrolling to work properly.\n   * Very weird. */\n  overflow-x: hidden;\n}\n\n.panes .preview-holder-wrapper {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n\n.panes .preview-holder {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  border-left: 16px solid #f0f0f0;\n}\n\n.panes .preview-holder-wrapper iframe {\n  -webkit-box-flex: 1;\n      -ms-flex: 1;\n          flex: 1;\n  border: none;\n}\n\n.CodeMirror {\n  font-family: \"Monaco\", \"Menlo\", \"Ubuntu Mono\", \"Consolas\",\n               \"source-code-pro\", monospace;\n\n  /* If we don't add this, the final characters on some lines aren't\n   * visible if the editor has a horizontal scrollbar. Weird. */\n  padding-right: 1em;\n}\n\n.CodeMirror-gutters {\n  border-right: none;\n  background: #f0f0f0;\n}\n\n.error-line {\n  background: #ffe5ea;\n}\n\n#textarea {\n  height: 100%;\n  width: 100%;\n  overflow-x: scroll;\n  white-space: nowrap;\n  padding-left: 0.5rem;\n}\n", "", {"version":3,"sources":["/./css/style.css"],"names":[],"mappings":"AAUA;;;;EAIE,aAAa;CACd;;AAED;EACE,UAAU;CACX;;AAED;EACE,gBAAgB;EAChB,oCAA4B;EAC5B,oBAAoB;EACpB,aAAa;EACb,0BAAmC;EACnC,oBAAoB;EACpB,eAAwB;EACxB,mBAAmB;EACnB,kBAAkB;EAClB,gBAAgB;CACjB;;AAED;;EAEE,cAAqB;EACrB,eAAsB;EACtB,sBAA6B;CAC9B;;AAED;EACE,kBAAkB;EAClB,mBAAmB;EACnB,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,6BAAuB;EAAvB,8BAAuB;MAAvB,2BAAuB;UAAvB,uBAAuB;EACvB,yBAAwB;MAAxB,sBAAwB;UAAxB,wBAAwB;CACzB;;AAED;EACE,aAAa;CACd;;AAED;EACE,cAAuB;EACvB,aAAa;EACb,YAAY;EACZ,qBAAqB;EACrB,kBAAkB;CACnB;;AAED;EACE,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,6BAAuB;EAAvB,8BAAuB;MAAvB,2BAAuB;UAAvB,uBAAuB;CACxB;;AAED;EACE,8BAAuC;EACvC,oBAAmC;EACnC,gBAAgB;EAChB;4CAA8B;EAC9B,aAAa;CACd;;AAED;EACE,oCAA4B;EAC5B,oBAAoB;EACpB,WAAW;CACZ;;AAED;EACE,qBAAc;EAAd,qBAAc;EAAd,cAAc;CACf;;AAED;EACE,aAAa;CACd;;AAED;EACE,oBAAQ;MAAR,YAAQ;UAAR,QAAQ;EACR,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,8BAAuC;CACxC;;;AAGD;EACE,oBAAQ;MAAR,YAAQ;UAAR,QAAQ;;EAER;mBACiB;EACjB,mBAAmB;CACpB;;AAED;EACE,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,6BAAuB;EAAvB,8BAAuB;MAAvB,2BAAuB;UAAvB,uBAAuB;CACxB;;AAED;EACE,oBAAQ;MAAR,YAAQ;UAAR,QAAQ;EACR,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,6BAAuB;EAAvB,8BAAuB;MAAvB,2BAAuB;UAAvB,uBAAuB;EACvB,gCAA+C;CAChD;;AAED;EACE,oBAAQ;MAAR,YAAQ;UAAR,QAAQ;EACR,aAAa;CACd;;AAED;EACE;4CAA8B;;EAE9B;gEAC8D;EAC9D,mBAAmB;CACpB;;AAED;EACE,mBAAmB;EACnB,oBAAmC;CACpC;;AAED;EACE,oBAA8B;CAC/B;;AAED;EACE,aAAa;EACb,YAAY;EACZ,mBAAmB;EACnB,oBAAoB;EACpB,qBAAqB;CACtB","file":"style.css","sourcesContent":[":root {\n  --very-light-gray: #f0f0f0;\n  --light-pink: #ffe5ea;\n  --dark-pink: #ec245e;\n  --blueish: #30b8e6;\n  --ui-font: Montserrat, sans-serif;\n  --code-font: \"Monaco\", \"Menlo\", \"Ubuntu Mono\", \"Consolas\",\n               \"source-code-pro\", monospace;\n}\n\nhtml,\nbody,\n#app-holder,\n.app {\n  height: 100%;\n}\n\nbody {\n  margin: 0;\n}\n\nbutton {\n  font-size: 14px;\n  font-family: var(--ui-font);\n  font-weight: normal;\n  color: black;\n  border: 1px solid var(--dark-pink);\n  background: inherit;\n  color: var(--dark-pink);\n  border-radius: 2px;\n  padding: 2px 12px;\n  cursor: pointer;\n}\n\nbutton:hover,\nbutton:hover .open-iconic {\n  fill: var(--blueish);\n  color: var(--blueish);\n  border-color: var(--blueish);\n}\n\na.p5-logo {\n  margin-left: 10px;\n  margin-right: 25px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n}\n\na.p5-logo img {\n  height: 25px;\n}\n\n.open-iconic {\n  fill: var(--dark-pink);\n  height: 16px;\n  width: 16px;\n  vertical-align: -10%;\n  margin-right: 5px;\n}\n\n.app {\n  display: flex;\n  flex-direction: column;\n}\n\n.status-bar {\n  border-top: 1px solid var(--dark-pink);\n  background: var(--very-light-gray);\n  min-height: 1em;\n  font-family: var(--code-font);\n  padding: 8px;\n}\n\n.error-message .error-message-line {\n  font-family: var(--ui-font);\n  font-weight: normal;\n  color: red;\n}\n\n.toolbar {\n  display: flex;\n}\n\n.toolbar button {\n  margin: 10px;\n}\n\n.panes {\n  flex: 1;\n  display: flex;\n  border-top: 1px solid var(--dark-pink);\n}\n\n\n.panes .editor-holder {\n  flex: 1;\n\n  /* We need this for horizontal scrolling to work properly.\n   * Very weird. */\n  overflow-x: hidden;\n}\n\n.panes .preview-holder-wrapper {\n  display: flex;\n  flex-direction: column;\n}\n\n.panes .preview-holder {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  border-left: 16px solid var(--very-light-gray);\n}\n\n.panes .preview-holder-wrapper iframe {\n  flex: 1;\n  border: none;\n}\n\n.CodeMirror {\n  font-family: var(--code-font);\n\n  /* If we don't add this, the final characters on some lines aren't\n   * visible if the editor has a horizontal scrollbar. Weird. */\n  padding-right: 1em;\n}\n\n.CodeMirror-gutters {\n  border-right: none;\n  background: var(--very-light-gray);\n}\n\n.error-line {\n  background: var(--light-pink);\n}\n\n#textarea {\n  height: 100%;\n  width: 100%;\n  overflow-x: scroll;\n  white-space: nowrap;\n  padding-left: 0.5rem;\n}\n"],"sourceRoot":"webpack://"}]);
 	
 	// exports
 
